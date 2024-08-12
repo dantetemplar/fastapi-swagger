@@ -14,7 +14,7 @@ Swagger UI distribution and host it inside your app.
 ### Installation
 
 ```bash
-pip install fastapi_swagger
+pip install fastapi-swagger
 ```
 
 ### Basic Usage
