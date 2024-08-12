@@ -26,8 +26,8 @@ jobs:
       - name: "Check for new Swagger release 🕵️‍♂️"
         id: check
         run: |
-          python check_swagger.py &&
-          echo "updated=$SWAGGER_UI_UPDATED" >> "$GITHUB_OUTPUT" &&
+          python check_swagger.py
+          echo "updated=$SWAGGER_UI_UPDATED" >> "$GITHUB_OUTPUT"
           echo "version=$SWAGGER_UI_VERSION" >> "$GITHUB_OUTPUT"
         # It will set SWAGGER_UI_UPDATED and SWAGGER_UI_VERSION env variables
         # If there is a new release, then needed files will be updated
@@ -37,12 +37,15 @@ jobs:
           version: ${{ steps.check.outputs.version }}
         run: |
           if [ "$updated" = "true" ]; then
+            echo "New Swagger UI version: $version"
             git config --global user.email "ruslan.belckov@yandex.ru"
             git config --global user.name "Automated Swagger UI update"
             git add 'fastapi_swagger/resources'
             git add 'latest_release.txt'
             git commit -m "chore: update Swagger UI to $version"
             git push
+          else
+            echo "No new Swagger UI release"
           fi
 
   build:
