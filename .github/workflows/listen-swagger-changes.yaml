@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: "Check out repository 🚚"
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT }}
       - name: "Print some debug info 🐞"
         run: |
           echo "Current directory: $(pwd)"
@@ -61,6 +59,8 @@ jobs:
     steps:
       - name: "Check out repository 🚚"
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
       - name: "Pull the latest changes 🔄"
         run: git pull
       - name: "Set up Python 🐍"
