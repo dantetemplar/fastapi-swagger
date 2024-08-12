@@ -7,6 +7,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      updated: ${{ steps.check.outputs.updated }}
     steps:
       - name: "Check out repository 🚚"
         uses: actions/checkout@v4
@@ -21,17 +24,83 @@ jobs:
       - name: "Install python libraries 📚"
         run: python -m pip install requests
       - name: "Check for new Swagger release 🕵️‍♂️"
-        working-directory: .
-        run: python check_swagger.py
+        id: check
+        run: |
+          python check_swagger.py &&
+          echo "updated=$SWAGGER_UI_UPDATED" >> "$GITHUB_OUTPUT" &&
+          echo "version=$SWAGGER_UI_VERSION" >> "$GITHUB_OUTPUT"
         # It will set SWAGGER_UI_UPDATED and SWAGGER_UI_VERSION env variables
         # If there is a new release, then needed files will be updated
       - name: "Make a commit if needed 📝"
+        env:
+          updated: ${{ outputs.updated }}
+          version: ${{ outputs.version }}
         run: |
-          if [ "$SWAGGER_UI_UPDATED" = "true" ]; then
+          if [ "$updated" = "true" ]; then
             git config --global user.email "ruslan.belckov@yandex.ru"
             git config --global user.name "Automated Swagger UI update"
             git add 'fastapi_swagger/resources'
             git add 'latest_release.txt'
-            git commit -m "chore: update Swagger UI to $SWAGGER_UI_VERSION"
+            git commit -m "chore: update Swagger UI to $version"
             git push
           fi
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check
+    if: ${{ needs.check.outputs.updated == 'true' }}
+    steps:
+      - name: "Check out repository 🚚"
+        uses: actions/checkout@v4
+      - name: "Set up Python 🐍"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: "Install Poetry 📦 (cache-hit)"
+        id: cached-poetry
+        uses: actions/cache@v4
+        with:
+          path: ~/.local  # the path depends on the OS
+          key: poetry-1.8.3  # increment to reset cache
+      - name: "Install Poetry 📦"
+        if: steps.cached-poetry.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1
+        with:
+          version: '1.8.3'
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: "Install Poetry dependencies 📦 (cache-hit)"
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-test-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: "Install Poetry dependencies 📦"
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --with dev
+      - name: "Test the project 🧪"
+        run: poetry run pytest
+      - name: "Bump version 📈"
+        id: bump
+        run: |
+          package_version=$(poetry version patch --short)
+          echo "package_version=$package_version" >> "$GITHUB_OUTPUT"
+      - name: "Build the project 🏗"
+        run: poetry build
+      - name: "Commit the changes with tag 🏷"
+        env:
+          package_version: ${{ steps.bump.outputs.package_version }}
+        run: |
+          git config --global user.email "ruslan.belckov@yandex.ru"
+          git config --global user.name "Automated Swagger UI update"
+          git add pyproject.toml
+          git commit -m "chore: bump version to $package_version"
+          git tag -a "v$package_version" -m "Release $package_version"
+          git push --follow-tags
+      - name: "Make a release 🚀"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          tag_name: "v${{ steps.bump.outputs.package_version }}"
+          name: "Release ${{ steps.bump.outputs.package_version }}"
+          body: "Release ${{ steps.bump.outputs.package_version }} 🚀\nSwagger UI version: ${{ needs.check.outputs.version }}"
