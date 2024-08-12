@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-swagger"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Ruslan Bel'kov <ruslan.belckov@yandex.ru>"]
 readme = "README.md"
@@ -20,7 +20,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.100"
+fastapi = ">=0.100"
 
 [tool.poetry.group.dev.dependencies]
 requests = "^2.32.3"
