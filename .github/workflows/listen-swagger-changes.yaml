@@ -59,8 +59,6 @@ jobs:
     steps:
       - name: "Check out repository 🚚"
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT }}
       - name: "Pull the latest changes 🔄"
         run: git pull
       - name: "Set up Python 🐍"
@@ -119,3 +117,22 @@ jobs:
           files: dist/*
           tag_name: "v${{ steps.bump.outputs.package_version }}"
           body: "Package version: v${{ steps.bump.outputs.package_version }} 🚀\nSwagger UI version: ${{ needs.check.outputs.version }}"
+
+  pypi-publish:
+    name: "Upload release to PyPI 📦"
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fastapi-swagger
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+      # retrieve your distributions here
+      - name: "Get distribution artifacts ⬇️"
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: "Publish package distributions to PyPI ⬆️"
+        uses: pypa/gh-action-pypi-publish@release/v1
