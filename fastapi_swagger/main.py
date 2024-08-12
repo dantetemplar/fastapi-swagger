@@ -1,3 +1,4 @@
+import warnings
 from importlib import resources
 from typing import Optional, Dict, Any
 
@@ -34,6 +35,18 @@ def patch_fastapi(
     :param init_oauth: OAuth2 configuration
     :param oauth2_redirect_url: OAuth2 redirect URL
     """
+    # docs_url=None, swagger_ui_oauth2_redirect_url=None should be set in FastAPI app definition
+    if getattr(app, "docs_url", None) is not None:
+        warnings.warn(
+            "`docs_url` is set in FastAPI app definition, please, set it to None",
+            UserWarning,
+        )
+    if getattr(app, "swagger_ui_oauth2_redirect_url", None) is not None:
+        warnings.warn(
+            "`swagger_ui_oauth2_redirect_url` is set in FastAPI app definition, please, set it to None",
+            UserWarning,
+        )
+
     if redirect_from_root_to_docs:
 
         @app.get("/", include_in_schema=False)
