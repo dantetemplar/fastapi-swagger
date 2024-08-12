@@ -31,7 +31,7 @@ jobs:
             git config --global user.email "ruslan.belckov@yandex.ru"
             git config --global user.name "Automated Swagger UI update"
             git add 'fastapi_swagger/resources'
-            git add 'latest_release.txt`
+            git add 'latest_release.txt'
             git commit -m "chore: update Swagger UI to $SWAGGER_UI_VERSION"
             git push
           fi
