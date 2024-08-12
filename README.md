@@ -76,5 +76,3 @@ patch_fastapi(app)
 # Now there are additional routes /swagger/swagger-ui-bundle.js, /swagger/swagger-ui.css, /swagger/favicon-32x32.png and /docs
 # They all are not dependent on the external resources.
 ```
-
-```python
