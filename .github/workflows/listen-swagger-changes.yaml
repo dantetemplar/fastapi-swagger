@@ -36,7 +36,7 @@ jobs:
           updated: ${{ steps.check.outputs.updated }}
           version: ${{ steps.check.outputs.version }}
         run: |
-          if [ "$updated" = "true" ]; then
+          if [ "$updated" == "true" ]; then
             echo "New Swagger UI version: $version"
             git config --global user.email "ruslan.belckov@yandex.ru"
             git config --global user.name "Automated Swagger UI update"
