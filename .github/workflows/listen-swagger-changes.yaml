@@ -111,4 +111,4 @@ jobs:
         with:
           files: dist/*
           tag_name: "v${{ steps.bump.outputs.package_version }}"
-          body: "Package version: ${{ steps.bump.outputs.package_version }} 🚀\nSwagger UI version: ${{ needs.check.outputs.version }}"
+          body: "Package version: v${{ steps.bump.outputs.package_version }} 🚀\nSwagger UI version: ${{ needs.check.outputs.version }}"
