@@ -1,0 +1,22 @@
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  pypi-publish:
+    name: "Upload release to PyPI 📦"
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fastapi-swagger
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+      # retrieve your distributions here
+      - name: "Get distribution artifacts ⬇️"
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: "Publish package distributions to PyPI ⬆️"
+        uses: pypa/gh-action-pypi-publish@release/v1
