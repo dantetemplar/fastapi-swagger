@@ -6,6 +6,7 @@ on:
 
 jobs:
   check:
+    name: "Check for new Swagger release 🕵️‍♂️"
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.output.outputs.version }}
@@ -53,6 +54,7 @@ jobs:
           fi
 
   build:
+    name: "Build and release 🚀"
     runs-on: ubuntu-latest
     needs: check
     if: ${{ needs.check.outputs.updated == 'true' }}
