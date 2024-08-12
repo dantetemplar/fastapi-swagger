@@ -8,8 +8,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.check.outputs.version }}
-      updated: ${{ steps.check.outputs.updated }}
+      version: ${{ steps.output.outputs.version }}
+      updated: ${{ steps.output.outputs.updated }}
     steps:
       - name: "Check out repository 🚚"
         uses: actions/checkout@v4
@@ -25,16 +25,18 @@ jobs:
         run: python -m pip install requests
       - name: "Check for new Swagger release 🕵️‍♂️"
         id: check
-        run: |
-          python check_swagger.py
-          echo "updated=$SWAGGER_UI_UPDATED" >> "$GITHUB_OUTPUT"
-          echo "version=$SWAGGER_UI_VERSION" >> "$GITHUB_OUTPUT"
+        run: python check_swagger.py
         # It will set SWAGGER_UI_UPDATED and SWAGGER_UI_VERSION env variables
         # If there is a new release, then needed files will be updated
+      - name: "Make the output available to other jobs 📤"
+        id: output
+        run: |
+          echo "updated=$SWAGGER_UI_UPDATED" >> "$GITHUB_OUTPUT"
+          echo "version=$SWAGGER_UI_VERSION" >> "$GITHUB_OUTPUT"
       - name: "Make a commit if needed 📝"
         env:
-          updated: ${{ steps.check.outputs.updated }}
-          version: ${{ steps.check.outputs.version }}
+          updated: ${{ steps.output.outputs.updated }}
+          version: ${{ steps.output.outputs.version }}
         run: |
           echo "Updated: $updated"
           echo "Version: $version"
