@@ -11,7 +11,7 @@ def patch_fastapi(
     docs_url: str = "/docs",
     redirect_from_root_to_docs: bool = True,
     *,
-    title: Optional[str],
+    title: Optional[str] = None,
     swagger_js_url: str = "/swagger/swagger-ui-bundle.js",  # relative path from app root
     swagger_css_url: str = "/swagger/swagger-ui.css",  # relative path from app root
     swagger_favicon_url: str = "/swagger/favicon-32x32.png",  # relative path from app root
