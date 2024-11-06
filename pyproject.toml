@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-swagger"
-version = "0.2.3"
+version = "0.2.4"
 description = "This plugin updates the FastAPI app to host latest Swagger UI distribution."
 authors = ["Ruslan Bel'kov <ruslan.belckov@yandex.ru>"]
 readme = "README.md"
