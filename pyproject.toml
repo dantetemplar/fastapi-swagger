@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-swagger"
-version = "0.3.39"
+version = "0.4.39"
 description = "This plugin updates the FastAPI app to host latest Swagger UI distribution."
 authors = [{ name = "Ruslan Bel'kov", email = "ruslan.belckov@yandex.ru" }]
 requires-python = "~=3.10"
