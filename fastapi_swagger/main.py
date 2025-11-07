@@ -66,6 +66,7 @@ def patch_fastapi(
                 "tryItOutEnabled": True,
                 "persistAuthorization": True,
                 "filter": True,
+                "displayRequestDuration": True
             }
         return get_swagger_ui_html(
             openapi_url=openapi_url,
