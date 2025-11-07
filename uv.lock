@@ -127,13 +127,13 @@ wheels = [
 
 [[package]]
 name = "fastapi-swagger"
-version = "0.3.26"
+version = "0.3.27"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
 ]
 
-[package.dev-dependencies]
+[package.optional-dependencies]
 dev = [
     { name = "httpx" },
     { name = "pytest" },
@@ -142,15 +142,14 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fastapi", specifier = ">=0.100" }]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "httpx", specifier = ">=0.27.0,<0.28" },
-    { name = "pytest", specifier = ">=8.3.2,<9" },
-    { name = "requests", specifier = ">=2.32.3,<3" },
-    { name = "ruff", specifier = ">=0.5.7,<0.6" },
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.100" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27.0,<0.28" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.2,<9" },
+    { name = "requests", marker = "extra == 'dev'", specifier = ">=2.32.3,<3" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.5.7,<0.6" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "h11"
