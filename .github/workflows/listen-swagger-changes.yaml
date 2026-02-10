@@ -43,8 +43,8 @@ jobs:
           echo "Version: $version"
           if [ "$updated" == true ]; then
             echo "New Swagger UI version: $version"
-            git config --global user.email "ruslan.belckov@yandex.ru"
-            git config --global user.name "Automated Swagger UI update"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add 'fastapi_swagger/resources'
             git add 'latest_release.txt'
             git commit -m "chore: update Swagger UI to $version"
