@@ -27,6 +27,9 @@ dev = [
     "pytest>=8.3.2,<9",
 ]
 
+[tool.uv]
+constraint-dependencies = ["urllib3>=2.7.0"]
+
 [tool.hatch.build.targets.sdist]
 include = ["fastapi_swagger"]
 
